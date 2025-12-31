@@ -47,8 +47,8 @@ export const updateTask = async (taskId: string, data: UpdateTaskData): Promise<
 };
 
 // Mark task as complete
-export const completeTask = async (taskId: string): Promise<Task> => {
-  const response = await api.patch<Task>(`/tasks/${taskId}/complete`);
+export const completeTask = async (taskId: string): Promise<string> => {
+  const response = await api.patch<string>(`/tasks/${taskId}/complete`);
   return response.data;
 };
 
