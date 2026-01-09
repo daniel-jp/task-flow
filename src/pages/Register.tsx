@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, CheckSquare, Mail, Lock, User } from 'lucide-react';
 import { z } from 'zod';
+import { AxiosError } from 'axios';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
@@ -43,22 +44,34 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await registerService({ name, email, password });
-      toast({
-        title: 'Account created!',
-        description: 'You can now log in with your credentials.',
-      });
-      navigate('/login');
-    } catch (error: any) {
-      const message = error.response?.data?.message || 'Failed to create account.';
-      toast({
-        variant: 'destructive',
-        title: 'Registration failed',
-        description: message.includes('already') ? 'This email is already registered.' : message,
-      });
-    } finally {
-      setLoading(false);
-    }
+  await registerService({ name, email, password });
+
+  toast({
+    title: 'Account created!',
+    description: 'You can now log in with your credentials.',
+  });
+
+  navigate('/login');
+} catch (error: unknown) {
+  let message = 'Failed to create account.';
+
+  if (error instanceof AxiosError) {
+    message =
+      error.response?.data?.message ?? 'Failed to create account.';
+  }
+
+  toast({
+    variant: 'destructive',
+    title: 'Registration failed',
+    description: message.includes('already')
+      ? 'This email is already registered.'
+      : message,
+  });
+} finally {
+  setLoading(false);
+}
+
+
   };
 
   return (

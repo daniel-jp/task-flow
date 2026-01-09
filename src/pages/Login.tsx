@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, CheckSquare, Mail, Lock } from 'lucide-react';
 import { z } from 'zod';
+import { AxiosError } from 'axios';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -48,14 +49,23 @@ const Login = () => {
         title: 'Welcome back!',
         description: 'You have successfully logged in.',
       });
-      navigate('/dashboard');
-    } catch (error: any) {
+      navigate("/dashboard");
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
       toast({
         variant: 'destructive',
         title: 'Login failed',
-        description: error.response?.data?.message || 'Invalid email or password.',
+        description:
+          error.response?.data?.message ?? 'Invalid email or password.',
       });
-    } finally {
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Unexpected error',
+        description: 'Something went wrong. Please try again.',
+      });
+    }
+  } finally {
       setLoading(false);
     }
   };

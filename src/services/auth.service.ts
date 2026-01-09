@@ -30,19 +30,19 @@ export interface LoginData {
 
 // Register new user
 export const register = async (data: RegisterData): Promise<User> => {
-  const response = await api.post<User>('/users', data);
+  const response = await api.post<User>("/users", data);
   return response.data;
 };
 
 // Login user
 export const login = async (data: LoginData): Promise<LoginResponse> => {
-  const response = await api.post<LoginResponse>('/users/auth', data);
+  const response = await api.post<LoginResponse>("/users/auth", data);
   return response.data;
 };
 
 // Get all users (admin only)
 export const getAllUsers = async (): Promise<User[]> => {
-  const response = await api.get<User[]>('/users');
+  const response = await api.get<User[]>("/users");
   return response.data;
 };
 

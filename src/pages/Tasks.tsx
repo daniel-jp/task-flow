@@ -116,8 +116,8 @@ const Tasks = () => {
 
   const handleComplete = async (taskId: string) => {
     try {
-      const updated = await completeTask(taskId);
-      setTasks(tasks.map((t) => (t.id === taskId ? updated : t)));
+      await completeTask(taskId);
+      setTasks(tasks.map((t) => (t.id === taskId ? { ...t, completed: true } : t)));
       toast({ title: 'Task marked as complete' });
     } catch (error) {
       toast({

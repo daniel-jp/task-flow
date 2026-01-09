@@ -9,10 +9,10 @@ const Index = () => {
 
   useEffect(() => {
     if (!loading) {
-      if (isAuthenticated) {
-        navigate('/dashboard');
-      } else {
+      if (!isAuthenticated) {
         navigate('/login');
+      } else {
+        navigate('/dashboard');
       }
     }
   }, [isAuthenticated, loading, navigate]);
