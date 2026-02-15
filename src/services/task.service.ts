@@ -1,10 +1,11 @@
 import api from './api';
 
 export interface Task {
-  id: string;
+  taskId: string;
   title: string;
   description: string;
-  completed: boolean;
+  status: 'PENDING' | 'PROCESSING' | 'COMPLETED';
+  userName?: string;
   userId: string;
   createdAt?: string;
   updatedAt?: string;
@@ -31,6 +32,7 @@ export const createTask = async (data: CreateTaskData): Promise<Task> => {
 // Get all tasks
 export const getAllTasks = async (): Promise<Task[]> => {
   const response = await api.get<Task[]>("/tasks");
+  console.log("Fetched tasks:", response.data);
   return response.data;
 };
 
@@ -41,16 +43,21 @@ export const getTasksByUserId = async (userId: string): Promise<Task[]> => {
 };
 
 // Update task
-export const updateTask = async (taskId: string, data: UpdateTaskData): Promise<Task> => {
+export const updateTask = async (
+  taskId: string,
+  data: UpdateTaskData):
+  Promise<Task> => {
   const response = await api.put<Task>(`/tasks/${taskId}`, data);
   return response.data;
 };
 
-// Mark task as complete
-export const completeTask = async (taskId: string): Promise<string> => {
-  const response = await api.patch<string>(`/tasks/${taskId}/complete`);
+
+
+export const toggleTask = async (taskId: string): Promise<Task> => {
+  const response = await api.patch<Task>(`/tasks/${taskId}/toggle`);
   return response.data;
 };
+
 
 // Delete task
 export const deleteTask = async (taskId: string): Promise<void> => {

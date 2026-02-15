@@ -93,9 +93,10 @@ const Register = () => {
       {/* Right side - Form */}
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="animate-slide-up">
+         
+          <div className="animate-slide-up flex flex-col items-center text-center">
             {/* Logo */}
-            <div className="flex items-center gap-2 mb-8">
+            <div className="mb-8 flex flex-col items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary shadow-glow">
                 <CheckSquare className="h-6 w-6 text-primary-foreground" />
               </div>

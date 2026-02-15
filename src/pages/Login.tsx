@@ -51,14 +51,29 @@ const Login = () => {
       });
       navigate("/dashboard");
     } catch (error: unknown) {
+
       if (error instanceof AxiosError) {
-      toast({
-        variant: 'destructive',
-        title: 'Login failed',
-        description:
-          error.response?.data?.message ?? 'Invalid email or password.',
+        let message = 'Invalid email or password.';
+
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          const backendMessage = error.response?.data?.message;
+
+          if (backendMessage?.toLowerCase().includes('locked')) {
+            message = 'Your account has been blocked by an administrator.';
+          } else if (backendMessage?.toLowerCase().includes('disabled')) {
+            message = 'Your account is disabled.';
+          }
+        }
+
+    toast({
+      variant: 'destructive',
+      title: 'Login failed',
+      description: message,
       });
-    } else {
+        
+        
+      } else {
+        
       toast({
         variant: 'destructive',
         title: 'Unexpected error',
@@ -75,25 +90,24 @@ const Login = () => {
       {/* Left side - Form */}
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="animate-slide-up">
-            {/* Logo */}
-            <div className="flex items-center gap-2 mb-8">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary shadow-glow">
-                <CheckSquare className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <span className="text-2xl font-bold text-foreground">TaskFlow</span>
+          
+         <div className="animate-slide-up flex flex-col items-center text-center">
+          {/* Logo */}
+          <div className="mb-8 flex flex-col items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary shadow-glow">
+              <CheckSquare className="h-6 w-6 text-primary-foreground" />
             </div>
 
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Sign in to your account
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Don't have an account?{' '}
-              <Link to="/register" className="font-medium text-primary hover:text-primary/80 transition-colors">
-                Sign up for free
-              </Link>
-            </p>
+            <span className="text-2xl font-bold text-foreground">
+              TaskFlow
+            </span>
           </div>
+
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">
+            Sign in to your account
+          </h2>
+        </div>
+
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-6 animate-slide-up" style={{ animationDelay: '100ms' }}>
             <div className="space-y-4">
@@ -143,8 +157,15 @@ const Login = () => {
               )}
             </Button>
           </form>
-        </div>
+          <p className="mt-4 text-sm text-muted-foreground">
+              Don't have an account?{' '}
+              <Link to="/register" className="font-medium text-primary hover:text-primary/80 transition-colors">
+                Sign up for free
+              </Link>
+            </p>
       </div>
+     </div>
+        
 
       {/* Right side - Decorative */}
       <div className="relative hidden w-0 flex-1 lg:block">

@@ -17,25 +17,30 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, onComplete, onEdit, onDelete }) => {
+
+const isCompleted = task.status === 'COMPLETED';
+const isProcessing = task.status === 'PROCESSING' || task.status === 'PENDING';
+
   return (
     <div
       className={cn(
         "group relative rounded-xl border border-border bg-card p-4 transition-all duration-200 hover:shadow-md animate-fade-in",
-        task.completed && "opacity-60"
+        isCompleted && "opacity-60"
+
       )}
     >
       <div className="flex items-start gap-3">
         {/* Checkbox */}
         <button
-          onClick={() => onComplete(task.id)}
+          onClick={() => onComplete(task.taskId)}
           className={cn(
             "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200",
-            task.completed
+              isCompleted
               ? "border-success bg-success"
               : "border-muted-foreground/30 hover:border-primary"
           )}
         >
-          {task.completed && <Check className="h-3 w-3 text-success-foreground" />}
+          {isCompleted && (<Check className="h-3 w-3 text-success-foreground" />)}
         </button>
 
         {/* Content */}
@@ -43,16 +48,21 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onComplete, onEdit, onDelete 
           <h3
             className={cn(
               "text-sm font-medium text-card-foreground",
-              task.completed && "line-through text-muted-foreground"
-            )}
+              isCompleted && "line-through text-muted-foreground"
+            )}  
           >
             {task.title}
           </h3>
+
+          <p className="text-xs text-muted-foreground">
+            Created by: {task.userName}
+          </p>
           {task.description && (
             <p
               className={cn(
                 "mt-1 text-sm text-muted-foreground line-clamp-2",
-                task.completed && "line-through"
+                isCompleted  && "line-through"
+
               )}
             >
               {task.description}
@@ -76,7 +86,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onComplete, onEdit, onDelete 
               <Edit2 className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDelete(task.id)} className="text-destructive focus:text-destructive">
+            <DropdownMenuItem onClick={() => onDelete(task.taskId)} className="text-destructive focus:text-destructive">
               <Trash2 className="mr-2 h-4 w-4" />
               Delete
             </DropdownMenuItem>
@@ -85,14 +95,29 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onComplete, onEdit, onDelete 
       </div>
 
       {/* Status badge */}
-      {task.completed && (
-        <div className="absolute right-4 bottom-4">
-          <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
+
+      <div className="absolute right-4 bottom-4">
+        {isCompleted && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-500">
             <Check className="h-3 w-3" />
             Completed
+
           </span>
-        </div>
-      )}
+          
+
+          
+        )}
+
+        {isProcessing && !isCompleted && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-orange-500">
+            
+            Processing
+          </span>
+        )}
+      </div>
+
+
+
     </div>
   );
 };

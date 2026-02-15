@@ -5,7 +5,7 @@ import {
   CheckSquare, 
   Users, 
   Settings,
-  ChevronLeft,
+  ChevronLeft,Shield ,
   ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -40,6 +40,13 @@ const Sidebar = () => {
       icon: <Users className="h-5 w-5" />,
       adminOnly: true,
     },
+    {
+      label: 'Roles',
+      href: '/admin/roles',
+      icon: <Shield className="h-5 w-5" />,
+      adminOnly: true,
+    },
+
   ];
 
   const filteredItems = navItems.filter(item => !item.adminOnly || isAdminUser);

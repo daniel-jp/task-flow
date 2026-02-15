@@ -3,11 +3,13 @@ import { useAuth } from '@/context/AuthContext';
 import {
   Task,
   getTasksByUserId,
+  getAllTasks,
   createTask,
   updateTask,
-  completeTask,
+  toggleTask ,
   deleteTask,
 } from '@/services/task.service';
+
 import Layout from '@/components/Layout';
 import TaskCard from '@/components/TaskCard';
 import { Button } from '@/components/ui/button';
@@ -31,9 +33,10 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Loader2, ListFilter, Search } from 'lucide-react';
 
-type FilterType = 'all' | 'pending' | 'completed';
+type FilterType = 'all' | 'pending'|'completed';
 
 const Tasks = () => {
+
   const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,27 +48,32 @@ const Tasks = () => {
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const fetchTasks = async () => {
-    if (!user?.id) return;
-
-    try {
-      const data = await getTasksByUserId(user.id);
-      setTasks(data);
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to load tasks.',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchTasks();
-  }, [user?.id]);
+  fetchTasks();
+}, []);
 
+  
+  const fetchTasks = async () => {
+    try {
+    
+    const data = await getAllTasks();
+    setTasks(data);
+
+  } catch (error) {
+    toast({
+      variant: 'destructive',
+      title: 'Error',
+      description: 'Failed to load tasks.',
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
+  
   const handleOpenDialog = (task?: Task) => {
     if (task) {
       setEditingTask(task);
@@ -85,14 +93,27 @@ const Tasks = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!user?.id) return;
 
     setSubmitting(true);
 
     try {
       if (editingTask) {
-        const updated = await updateTask(editingTask.id, formData);
-        setTasks(tasks.map((t) => (t.id === updated.id ? updated : t)));
+         console.log("Updating task:", editingTask.taskId, formData);
+
+        const updated = await updateTask(editingTask.taskId, formData);
+        console.log("Response:", updated);
+
+        //  setTasks(tasks.map((t) => (t.taskId === updated.taskId ? updated : t)));
+        
+        setTasks((prevTasks) =>
+                 prevTasks.map((t) => String(t.taskId) === String(updated.taskId)
+      ? { ...t, ...updated }
+      : t));
+
+     
+
         toast({ title: 'Task updated successfully' });
       } else {
         const newTask = await createTask({
@@ -114,24 +135,52 @@ const Tasks = () => {
     }
   };
 
-  const handleComplete = async (taskId: string) => {
-    try {
-      await completeTask(taskId);
-      setTasks(tasks.map((t) => (t.id === taskId ? { ...t, completed: true } : t)));
-      toast({ title: 'Task marked as complete' });
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to complete task.',
-      });
+  
+const handleComplete = async (taskId: string) => {
+  try {
+
+    
+    const updatedTask = await toggleTask(taskId);
+
+    if (!updatedTask) {
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.taskId === updatedTask.taskId ? updatedTask : t
+        )
+      );
+
+      toast({ title: 'Task status completed' });
     }
-  };
+    else {
+
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.taskId === updatedTask.taskId ? updatedTask : t
+        )
+      );
+            toast({ title: 'Task status in processing' });
+
+       }
+
+  } catch {
+    toast({
+      variant: 'destructive',
+      title: 'Error',
+      description: 'Failed to update task.',
+    });
+  }
+};
+
 
   const handleDelete = async (taskId: string) => {
     try {
       await deleteTask(taskId);
-      setTasks(tasks.filter((t) => t.id !== taskId));
+
+      //setTasks(tasks.filter((t) => t.taskId !== taskId));
+
+      setTasks((prevTasks) =>
+          prevTasks.filter((t) => String(t.taskId) !== String(taskId))
+        );
       toast({ title: 'Task deleted successfully' });
     } catch (error) {
       toast({
@@ -144,8 +193,8 @@ const Tasks = () => {
 
   const filteredTasks = tasks
     .filter((task) => {
-      if (filter === 'pending') return !task.completed;
-      if (filter === 'completed') return task.completed;
+      if (filter === 'pending') return task.status !== 'COMPLETED';
+      if (filter === 'completed') return task.status === 'COMPLETED';
       return true;
     })
     .filter((task) =>
@@ -153,6 +202,10 @@ const Tasks = () => {
       task.description?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+
+
+
+  
   return (
     <Layout>
       <div className="space-y-6 animate-fade-in">
@@ -215,7 +268,7 @@ const Tasks = () => {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {filteredTasks.map((task) => (
               <TaskCard
-                key={task.id}
+                key={task.taskId}
                 task={task}
                 onComplete={handleComplete}
                 onEdit={handleOpenDialog}
@@ -258,17 +311,14 @@ const Tasks = () => {
                 <Button type="button" variant="outline" onClick={handleCloseDialog}>
                   Cancel
                 </Button>
-                <Button type="submit" className="gradient-primary" disabled={submitting}>
+                <Button type="submit"
+                  className="gradient-primary" disabled={submitting}>
                   {submitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       {editingTask ? 'Updating...' : 'Creating...'}
                     </>
-                  ) : editingTask ? (
-                    'Update Task'
-                  ) : (
-                    'Create Task'
-                  )}
+                  ) : editingTask ? ('Update Task') : ('Create Task')}
                 </Button>
               </DialogFooter>
             </form>

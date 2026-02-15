@@ -35,6 +35,8 @@ const Dashboard = () => {
     fetchTasks();
   }, [user?.id, toast]);
 
+
+  
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter(t => t.completed).length;
   const pendingTasks = totalTasks - completedTasks;

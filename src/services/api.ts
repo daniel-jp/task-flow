@@ -7,7 +7,7 @@ const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-  },
+  },  
 });
 
 // Request interceptor to add JWT token
@@ -23,7 +23,7 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
+ 
 // Response interceptor to handle errors
 api.interceptors.response.use(
   (response) => response,

@@ -4,6 +4,8 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  enabled: boolean;
+  locked: boolean;
   roles: Role[];
 }
 
@@ -63,6 +65,22 @@ export const deleteUser = async (userId: string): Promise<void> => {
   await api.delete(`/users/${userId}`);
 };
 
+export const lockUser = async (userId: string): Promise<void> => {
+  await api.put(`/users/${userId}/lock`);
+};
+
+export const unlockUser = async (userId: string): Promise<void> => {
+  await api.put(`/users/${userId}/unlock`);
+};
+
+export const enableUser = async (userId: string): Promise<void> => {
+  await api.put(`/users/${userId}/enable`);
+};
+
+export const disableUser = async (userId: string): Promise<void> => {
+  await api.put(`/users/${userId}/disable`);
+};
+
 // Store auth data
 export const setAuthData = (token: string, user: User): void => {
   localStorage.setItem('token', token);
@@ -95,5 +113,6 @@ export const clearAuthData = (): void => {
 
 // Check if user is admin
 export const isAdmin = (user: User | null): boolean => {
-  return user?.roles?.some(role => role.name === 'ADMIN' || role.name === 'admin') ?? false;
+  return user?.roles?.some(role =>
+    role.name === 'ADMIN' || role.name === 'ROLE_ADMIN') ?? false;
 };

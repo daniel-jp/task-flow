@@ -18,6 +18,12 @@ export const deleteRole = async (roleId: string): Promise<void> => {
   await api.delete(`/roles/delete/${roleId}`);
 };
 
+// Update role name
+export const updateRole = async (roleId: string, name: string): Promise<Role> => {
+  const response = await api.put<Role>(`/roles/${roleId}`, { name });
+  return response.data;
+};
+
 // Assign role to user
 export const assignRoleToUser = async (userId: string, roleId: string): Promise<void> => {
   await api.post(`/roles/assign-user-to-role?userId=${userId}&roleId=${roleId}`);
@@ -25,5 +31,10 @@ export const assignRoleToUser = async (userId: string, roleId: string): Promise<
 
 // Remove role from user
 export const removeRoleFromUser = async (userId: string, roleId: string): Promise<void> => {
-  await api.delete(`/roles/remove-user-from-role?userId=${userId}&roleId=${roleId}`);
+  await api.delete(`/roles/remove-role-from-user?userId=${userId}&roleId=${roleId}`);
+};
+
+// Remove all users from a role (admin only)
+export const removeRoleFromAllUsers = async (roleId: string): Promise<void> => {
+  await api.delete(`/roles/${roleId}/users`);
 };

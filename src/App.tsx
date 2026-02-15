@@ -10,8 +10,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
-import AdminUsers from "./pages/AdminUsers";
+import AdminUsers from "./pages/admin/AdminUsers";
 import NotFound from "./pages/NotFound";
+import Roles from "./pages/admin/Roles";
 
 const queryClient = new QueryClient();
 
@@ -43,11 +44,13 @@ const App = () => (
             <Route
               path="/admin/users"
               element={
-                <ProtectedRoute requireAdmin>
+                  <ProtectedRoute requireAdmin>
                   <AdminUsers />
                 </ProtectedRoute>
               }
             />
+
+            <Route path="/admin/roles" element={<Roles />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
