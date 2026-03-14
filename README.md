@@ -12,7 +12,7 @@ shadcn-ui
 Tailwind CSS
 
 ## BACKEND
-Java 21
+   - Java 21
 Spring Boot
 Spring DATA
 PostgreSql
