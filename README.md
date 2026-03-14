@@ -1,17 +1,17 @@
 
 
-#TASK-FLOW OR TO-DO List
-##What technologies are used for this project?
+# TASK-FLOW OR TO-DO List
+## What technologies are used for this project?
 This project is built with:
 
-##FRONTEND
+## FRONTEND
 Vite
 TypeScript
 React
 shadcn-ui
 Tailwind CSS
 
-##BACKEND
+## BACKEND
 Java 21
 Spring Boot
 Spring DATA
