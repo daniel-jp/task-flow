@@ -10,6 +10,7 @@ TypeScript
 React
 shadcn-ui
 Tailwind CSS
+
 ##BACKEND
 Java 21
 Spring Boot
