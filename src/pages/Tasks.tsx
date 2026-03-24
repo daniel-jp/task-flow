@@ -87,7 +87,7 @@ const Tasks = () => {
         const newTask = await createTask({
           title: formData.title,
           description: formData.description,
-          user: { userId: user.userId },
+          user: { userId: user.id },
         });
         setTasks((prev) => [newTask, ...prev]);
         toast({ title: 'Task created successfully' });

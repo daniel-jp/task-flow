@@ -14,8 +14,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user?.userId) return;
-    fetchTasks(user.userId);
+    if (!user?.id) return;
+    fetchTasks(user.id);
   }, [user?.userId, authLoading, fetchTasks]);
 
   const sortedTasks = useMemo(() => {
