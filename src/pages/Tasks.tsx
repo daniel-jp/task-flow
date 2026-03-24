@@ -68,7 +68,7 @@ const Tasks = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user?.userId) {
+    if (!user?.id) {
       toast({ variant: 'destructive', title: 'Error', description: 'User not authenticated' });
       return;
     }
