@@ -93,11 +93,12 @@ const Tasks = () => {
         toast({ title: 'Task created successfully' });
       }
       handleCloseDialog();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : 'Failed to process task';
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: error.response?.data?.message || 'Failed to process task',
+        description: errMsg,
       });
     } finally {
       setSubmitting(false);
