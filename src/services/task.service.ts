@@ -15,9 +15,7 @@ export interface Task {
 export interface CreateTaskData {
   title: string;
   description: string;
-  user: {
-    userId: string;
-  };
+  userId: string;
 }
 
 export interface UpdateTaskData {
