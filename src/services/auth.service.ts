@@ -39,7 +39,13 @@ export const register = async (data: RegisterData): Promise<User> => {
 // Login user
 export const login = async (data: LoginData): Promise<LoginResponse> => {
   const response = await api.post<LoginResponse>("/users/auth", data);
-  return response.data;
+  const loginData = response.data;
+  // Normalize: backend may return userId instead of id
+  const raw = loginData.user as unknown as Record<string, unknown>;
+  if (!loginData.user.id && raw.userId) {
+    loginData.user.id = raw.userId as string;
+  }
+  return loginData;
 };
 
 // Get all users (admin only)
@@ -92,7 +98,12 @@ export const getStoredUser = (): User | null => {
   const userStr = localStorage.getItem('user');
   if (userStr) {
     try {
-      return JSON.parse(userStr);
+      const parsed = JSON.parse(userStr);
+      // Normalize: handle userId vs id
+      if (!parsed.id && parsed.userId) {
+        parsed.id = parsed.userId;
+      }
+      return parsed.id ? parsed : null;
     } catch {
       return null;
     }
