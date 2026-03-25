@@ -39,7 +39,12 @@ export const register = async (data: RegisterData): Promise<User> => {
 // Login user
 export const login = async (data: LoginData): Promise<LoginResponse> => {
   const response = await api.post<LoginResponse>("/users/auth", data);
-  return response.data;
+  const loginData = response.data;
+  // Normalize: backend may return userId instead of id
+  if (loginData.user && !loginData.user.id && (loginData.user as Record<string, unknown>).userId) {
+    loginData.user.id = (loginData.user as Record<string, unknown>).userId as string;
+  }
+  return loginData;
 };
 
 // Get all users (admin only)
