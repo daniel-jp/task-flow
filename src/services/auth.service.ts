@@ -98,7 +98,12 @@ export const getStoredUser = (): User | null => {
   const userStr = localStorage.getItem('user');
   if (userStr) {
     try {
-      return JSON.parse(userStr);
+      const parsed = JSON.parse(userStr);
+      // Normalize: handle userId vs id
+      if (!parsed.id && parsed.userId) {
+        parsed.id = parsed.userId;
+      }
+      return parsed.id ? parsed : null;
     } catch {
       return null;
     }
