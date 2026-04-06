@@ -6,10 +6,15 @@ export const getAllRoles = async (): Promise<Role[]> => {
   const response = await api.get<Role[]>('/roles');
   return response.data;
 };
-
+// Find role by name
+export const findRoleByName = async (name: string): Promise<Role> => {
+  const response = await api.get<Role>(`/roles/name`, {params: { name }
+  });
+  return response.data;
+};
 // Create a new role (admin only)
-export const createRole = async (name: string): Promise<Role> => {
-  const response = await api.post<Role>('/roles', { name });
+export const createRole = async (data: { name: string }): Promise<Role> => {
+  const response = await api.post<Role>('/roles',  data);
   return response.data;
 };
 

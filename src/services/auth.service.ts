@@ -49,36 +49,36 @@ export const getAllUsers = async (): Promise<User[]> => {
 };
 
 // Get user by ID
-export const getUserById = async (userId: string): Promise<User> => {
-  const response = await api.get<User>(`/users/${userId}`);
+export const getUserById = async (id: string): Promise<User> => {
+  const response = await api.get<User>(`/users/${id}`);
   return response.data;
 };
 
 // Update user
-export const updateUser = async (userId: string, data: Partial<User>): Promise<User> => {
-  const response = await api.put<User>(`/users/${userId}`, data);
+export const updateUser = async (id: string, data: Partial<User>): Promise<User> => {
+  const response = await api.put<User>(`/users/${id}`, data);
   return response.data;
 };
 
 // Delete user
-export const deleteUser = async (userId: string): Promise<void> => {
-  await api.delete(`/users/${userId}`);
+export const deleteUser = async (id: string): Promise<void> => {
+  await api.delete(`/users/${id}`);
 };
 
-export const lockUser = async (userId: string): Promise<void> => {
-  await api.put(`/users/${userId}/lock`);
+export const lockUser = async (id: string): Promise<void> => {
+  await api.put(`/users/${id}/lock`);
 };
 
-export const unlockUser = async (userId: string): Promise<void> => {
-  await api.put(`/users/${userId}/unlock`);
+export const unlockUser = async (id: string): Promise<void> => {
+  await api.put(`/users/${id}/unlock`);
 };
 
-export const enableUser = async (userId: string): Promise<void> => {
-  await api.put(`/users/${userId}/enable`);
+export const enableUser = async (id: string): Promise<void> => {
+  await api.put(`/users/${id}/enable`);
 };
 
-export const disableUser = async (userId: string): Promise<void> => {
-  await api.put(`/users/${userId}/disable`);
+export const disableUser = async (id: string): Promise<void> => {
+  await api.put(`/users/${id}/disable`);
 };
 
 // Store auth data

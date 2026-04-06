@@ -52,14 +52,14 @@ const AdminUsers = () => {
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [selectedUserName, setSelectedUserName] = useState<string>('');
-const [selectedGlobalRoleId, setSelectedGlobalRoleId] = useState<string>('');
-const [removingRole, setRemovingRole] = useState(false);
+    const [selectedGlobalRoleId, setSelectedGlobalRoleId] = useState<string>('');
+    const [removingRole, setRemovingRole] = useState(false);
 
     const { toast } = useToast();
 
 
-    const handleOpenDeleteDialog = (userId: string, userName: string) => {
-        setSelectedUserId(userId);
+    const handleOpenDeleteDialog = (id: string, userName: string) => {
+        setSelectedUserId(id);
         setSelectedUserName(userName);
         setOpenDeleteDialog(true);
     };
@@ -289,7 +289,10 @@ const handleRemoveRoleFromAllUsers = async () => {
             // Refresh user list
             const updatedUsers = await getAllUsers();
             setUsers(updatedUsers);
-            toast({ title: 'User created successfully' });
+            toast({
+                title: 'User created successfully',
+                className: 'bg-green-500 text-white',
+            });
             setIsAddDialogOpen(false);
             setAddForm({ name: '', email: '', password: '' });
         } catch (error) {
@@ -331,13 +334,13 @@ const handleRemoveRoleFromAllUsers = async () => {
             setProcessing(false);
         }
     };
-
-    const handleRemoveRole = async (userId: string, roleId: string) => {
+ 
+    const handleRemoveRole = async (id: string, roleId: string) => {
         try {
-            await removeRoleFromUser(userId, roleId);
+            await removeRoleFromUser(id, roleId);
             setUsers(
                 users.map((u) =>
-                    u.id === userId
+                    u.id === id
                         ? { ...u, roles: u.roles?.filter((r) => r.id !== roleId) || [] }
                         : u
                 )
@@ -357,6 +360,30 @@ const handleRemoveRoleFromAllUsers = async () => {
         return roles.filter((r) => !userRoleIds.includes(r.id));
     };
 
+
+    const handleDeleteUser = async () => {
+  if (!selectedUserId) return;
+
+  try {
+    await deleteUser(selectedUserId);
+
+    setUsers(users.filter(u => u.id !== selectedUserId));
+
+    toast({
+      title: "User deleted successfully"
+    });
+
+  } catch {
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: "Failed to delete user"
+    });
+  }
+
+  setOpenDeleteDialog(false);
+    };
+    
     return (
         <Layout>
             <div className="space-y-6 animate-fade-in">
@@ -450,47 +477,47 @@ const handleRemoveRoleFromAllUsers = async () => {
                         </Button>
                     )}
 
-                    <div className="flex flex-wrap items-end gap-4 p-4 rounded-lg border border-border bg-destructive/5">
-  <div className="flex flex-col gap-2">
-    <Label className="text-sm text-muted-foreground">
-      Remove role from all users
-    </Label>
+                <div className="flex flex-wrap items-end gap-4 p-4 rounded-lg border border-border bg-destructive/5">
+                <div className="flex flex-col gap-2">
+                    <Label className="text-sm text-muted-foreground">
+                    Remove role from all users
+                    </Label>
 
-    <Select
-      value={selectedGlobalRoleId}
-      onValueChange={setSelectedGlobalRoleId}
-    >
-      <SelectTrigger className="w-56">
-        <SelectValue placeholder="Select a role" />
-      </SelectTrigger>
-      <SelectContent>
-        {roles.map((role) => (
-          <SelectItem key={role.id} value={role.id}>
-            {role.name}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  </div>
+                    <Select
+                    value={selectedGlobalRoleId}
+                    onValueChange={setSelectedGlobalRoleId}
+                    >
+                    <SelectTrigger className="w-56">
+                        <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {roles.map((role) => (
+                        <SelectItem key={role.id} value={role.id}>
+                            {role.name}
+                        </SelectItem>
+                        ))}
+                    </SelectContent>
+                    </Select>
+                </div>
 
-  <Button
-    variant="destructive"
-    disabled={!selectedGlobalRoleId || removingRole}
-    onClick={handleRemoveRoleFromAllUsers}
-  >
-    {removingRole ? (
-      <>
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        Removing...
-      </>
-    ) : (
-      <>
-        <ShieldBan className="mr-2 h-4 w-4" />
-        Remove from all users
-      </>
-    )}
-  </Button>
-</div>
+                <Button
+                    variant="destructive"
+                    disabled={!selectedGlobalRoleId || removingRole}
+                    onClick={handleRemoveRoleFromAllUsers}
+                >
+                    {removingRole ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Removing...
+                    </>
+                    ) : (
+                    <>
+                        <ShieldBan className="mr-2 h-4 w-4" />
+                        Remove from all users
+                    </>
+                    )}
+                </Button>
+                </div>
 
                 </div>
 
@@ -578,7 +605,7 @@ const handleRemoveRoleFromAllUsers = async () => {
                                                     onClick={() => handleOpenEditDialog(user)}
                                                     title="Edit User"
                                                 >
-                                                   <span className="inline-flex items-center rounded-md bg-green-400/10 text-orange-400 inset-ring inset-ring-green-500/20">  <Pencil className="h-4 w-4" /></span>
+                                                    <span className="inline-flex items-center rounded-md bg-green-400/10 text-orange-400 inset-ring inset-ring-green-500/20">  <Pencil className="h-4 w-4" /></span>
                                                 </Button>
 
                                                 {/* Lock/Unlock User */}
@@ -607,7 +634,7 @@ const handleRemoveRoleFromAllUsers = async () => {
                                                         title={user.locked ? "Unlock User" : "Lock User"}
                                                     >
                                                         {user.locked ? (
-                                                           <Lock className="h-4 w-4  text-red-600  " /> 
+                                                            <Lock className="h-4 w-4  text-red-600  " /> 
                                                         ) : (
                                                             <Unlock className="h-4 w-4  text-green-400" />
                                                         )}
@@ -635,12 +662,13 @@ const handleRemoveRoleFromAllUsers = async () => {
                                                         variant="outline"
                                                         size="sm"
                                                         onClick={() => handleOpenDeleteDialog(user.id, user.name)}
-
                                                         className="text-destructive hover:text-destructive hover:bg-destructive/10"
                                                         title="Delete User"
                                                     >
                                                         <Trash2 className="h-4 w-4  text-red-600" />
                                                     </Button>
+
+                                                    
                                                 )}
                                             </div>
                                         </TableCell>
@@ -715,8 +743,7 @@ const handleRemoveRoleFromAllUsers = async () => {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                disabled={currentPage === totalPages}
-                            >
+                                disabled={currentPage === totalPages}>
                                 Next
                                 <ChevronRight className="h-4 w-4" />
                             </Button>
@@ -956,17 +983,14 @@ const handleRemoveRoleFromAllUsers = async () => {
                                 Cancel
                             </Button>
 
+                            
+
                             <Button
-                                variant="destructive"
-                                onClick={() => {
-                                    if (selectedUserId) {
-                                        handleOpenDeleteDialog(selectedUserId, selectedUserName);
-                                    }
-                                    setOpenDeleteDialog(false);
-                                }}
-                            >
-                                Confirm delete
-                            </Button>
+                                    variant="destructive"
+                                    onClick={handleDeleteUser}
+                                    >
+                                    Confirm delete
+                                    </Button>
                         </div>
                     </DialogContent>
                 </Dialog>

@@ -5,10 +5,11 @@ export interface Task {
   title: string;
   description: string;
   status: 'PENDING' | 'PROCESSING' | 'COMPLETED';
-  userName?: string;
-  userId: string;
   createdAt?: string;
   updatedAt?: string;
+  doneDate?: string | null;
+  userName?: string;
+  userIdd: string;
 }
 
 export interface CreateTaskData {
@@ -20,37 +21,44 @@ export interface CreateTaskData {
 export interface UpdateTaskData {
   title?: string;
   description?: string;
-  completed?: boolean;
+  userId: string;
 }
 
 // Create a new task
 export const createTask = async (data: CreateTaskData): Promise<Task> => {
+  console.log("Sending task:", data);
   const response = await api.post<Task>("/tasks", data);
+  console.log("Response:", response.data);
   return response.data;
 };
 
+export const getTasksByUserId = async (id: string): Promise<Task[]> => {
+  const response = await api.get(`/tasks/user/${id}`);
+  return response.data;
+};
 // Get all tasks
 export const getAllTasks = async (): Promise<Task[]> => {
   const response = await api.get<Task[]>("/tasks");
-  console.log("Fetched tasks:", response.data);
+  //console.log("Fetched tasks:", response.data);
   return response.data;
 };
 
+// Get task by ID
+export const getTaskById = async (taskId: string): Promise<Task> => {
+  const response = await api.get<Task>(`/tasks/${taskId}`);
+  return response.data;
+};
 // Get tasks by user ID
-export const getTasksByUserId = async (userId: string): Promise<Task[]> => {
-  const response = await api.get<Task[]>(`/tasks/user/${userId}`);
+
+
+export const updateTask = async (taskId: string, data: UpdateTaskData): Promise<Task> => {
+  const response = await api.put<Task>(`/tasks/${taskId}`, {
+    title: data.title,
+    description: data.description,
+    userId: data.userId
+  });
   return response.data;
 };
-
-// Update task
-export const updateTask = async (
-  taskId: string,
-  data: UpdateTaskData):
-  Promise<Task> => {
-  const response = await api.put<Task>(`/tasks/${taskId}`, data);
-  return response.data;
-};
-
 
 
 export const toggleTask = async (taskId: string): Promise<Task> => {

@@ -11,25 +11,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useEffect, useState } from 'react';
+import { useTheme } from '@/context/ThemeContext';
+
 
 const Navbar = () => {
   const { user, logout, isAdminUser } = useAuth();
   const navigate = useNavigate();
-  const [isDark, setIsDark] = useState(true);
 
-  useEffect(() => {
-    // Set dark mode by default
-    if (!document.documentElement.classList.contains('dark') && !document.documentElement.classList.contains('light')) {
-      document.documentElement.classList.add('dark');
-    }
-    setIsDark(document.documentElement.classList.contains('dark'));
-  }, []);
 
-  const toggleTheme = () => {
-    document.documentElement.classList.toggle('dark');
-    setIsDark(!isDark);
-  };
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
 
+ 
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -46,14 +39,14 @@ const Navbar = () => {
 
         <div className="flex items-center gap-3">
           {/* Theme toggle */}
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={toggleTheme}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
+        <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={toggleTheme}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
 
           {/* User menu */}
           <DropdownMenu>

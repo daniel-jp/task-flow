@@ -49,6 +49,7 @@ const Register = () => {
   toast({
     title: 'Account created!',
     description: 'You can now log in with your credentials.',
+     className: 'bg-green-500 text-white',
   });
 
   navigate('/login');
