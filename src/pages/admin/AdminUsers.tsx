@@ -181,14 +181,14 @@ const handleRemoveRoleFromAllUsers = async () => {
                 setUsers(users.map((u) =>
                     u.id === user.id ? { ...u, enabled: false } : u
                 ));
-                toast({ title: 'User disabled successfully' });
+                toast({ title: 'User disabled successfully',  className:' bg-orange-400/10 text-green-500 border border-green-400/20 backdrop-blur-sm justify-center'});
             } else {
                 // ATIVAR
                 await enableUser(user.id);
                 setUsers(users.map((u) =>
                     u.id === user.id ? { ...u, enabled: true } : u
                 ));
-                toast({ title: 'User enabled successfully' });
+                toast({ title: 'User enabled successfully', className:'bg-green-400/10 text-green-500 border border-green-400/20 backdrop-blur-sm justify-center'});
             }
         } catch (error) {
             toast({
@@ -206,11 +206,11 @@ const handleRemoveRoleFromAllUsers = async () => {
             if (user.locked) {
                 await unlockUser(user.id);
                 setUsers(users.map((u) => (u.id === user.id ? { ...u, locked: false } : u)));
-                toast({ title: 'User unlocked successfully' });
+                toast({ title: 'User unlocked successfully',className:'text-green-300 justify-center' });
             } else {
                 await lockUser(user.id);
                 setUsers(users.map((u) => (u.id === user.id ? { ...u, locked: true } : u)));
-                toast({ title: 'User locked successfully' });
+                toast({ title: 'User locked successfully', className:'text-red-500 justify-center' });
             }
         } catch (error) {
             toast({
@@ -334,7 +334,7 @@ const handleRemoveRoleFromAllUsers = async () => {
             setProcessing(false);
         }
     };
- 
+
     const handleRemoveRole = async (id: string, roleId: string) => {
         try {
             await removeRoleFromUser(id, roleId);
@@ -521,9 +521,6 @@ const handleRemoveRoleFromAllUsers = async () => {
 
                 </div>
 
-
-                
-
                 {loading ? (
                     <div className="flex items-center justify-center py-12">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -562,6 +559,7 @@ const handleRemoveRoleFromAllUsers = async () => {
                                                 </Badge>
                                             </div>
                                         </TableCell>
+                                        
                                         <TableCell>
                                             <div className="flex flex-wrap gap-1">
                                                 {user.roles?.length ? (
@@ -614,10 +612,13 @@ const handleRemoveRoleFromAllUsers = async () => {
                                                         variant="outline"
                                                         size="sm"
                                                         onClick={() => handleToggleEnable(user)}
-                                                        title={user.enabled ? "Enable User" : "Enable User"}
-                                                    >
+                                                        title={user.enabled ? "Enable User" : "Enable User"}>
                                                         {user.enabled ? (
-                                                            <span className="inline-flex items-center rounded-md bg-green-400/10 text-green-400 inset-ring inset-ring-green-500/20"> <ShieldCheck className="h-4 w-4 " /></span>
+                                                            <span
+                                                                className="inline-flex items-center rounded-md bg-green-400/10 
+                                                                text-green-400 inset-ring inset-ring-green-500/20">
+                                                                <ShieldCheck className="h-4 w-4 " />
+                                                            </span>
 
                                                         ) : (
                                                             <ShieldBan className="h-4 w-4" />

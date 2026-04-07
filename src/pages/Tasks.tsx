@@ -31,7 +31,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Loader2, ListFilter, Search } from 'lucide-react';
-import { title } from 'process';
+
 type FilterType = 'all' | 'pending' | 'completed';
 
 const Tasks = () => {
@@ -94,7 +94,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         prev.map(t => t.taskId === updated.taskId ? updated : t)
       );
 
-      toast({ title: 'Task updated successfully',  className: 'bg-green-500 text-white', });
+      toast({ title: 'Task updated successfully',  className: 'bg-green-400/10 text-green-500 border border-green-400/20 backdrop-blur-sm justify-center ', });
 
     } else {
 
@@ -106,7 +106,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
       setTasks(prev => [newTask, ...prev]);
 
-      toast({ title: 'Task created successfully',  className: 'bg-green-500 text-white', });
+      toast({ title: 'Task created successfully',  className: 'bg-green-400/10 text-green-500 border border-green-400/20 backdrop-blur-sm justify-center', });
     }
 
     handleCloseDialog();
@@ -146,11 +146,11 @@ const handleSubmit = async (e: React.FormEvent) => {
       setTasks((prev) => prev.map((t) => t.taskId === updatedTask.taskId ? updatedTask : t));
 
       if (updatedTask.status === 'COMPLETED') {
-        toast({ title: 'Task completed', description: 'Task marked as completed.', className: 'bg-green-500 text-white' });
+        toast({ title: 'Task completed', description: 'Task marked as completed.', className: 'bg-green-400/10 text-green-500 border border-green-400/20 backdrop-blur-sm' });
       } else if (updatedTask.status === 'PROCESSING') {
-        toast({ title: 'Task in processing', description: 'Task is being processed.', className: 'bg-orange-500 text-white' });
+        toast({ title: 'Task in processing', description: 'Task is being processed.', className: 'bg-orange-600/10 text-white-500 border border-orange-400/20 backdrop-blur-sm' });
       } else if (updatedTask.status === 'PENDING') {
-        toast({ title: 'Task pending', description: 'Task moved back to pending.', className: 'bg-blue-500 text-white' });
+        toast({ title: 'Task pending', description: 'Task moved back to pending.', className: 'bg-blue-400/10 text-white-500 border border-blue-400/20 backdrop-blur-sm' });
       }
     } catch {
       toast({ variant: 'destructive', title: 'Error', description: 'Failed to update task.' });
