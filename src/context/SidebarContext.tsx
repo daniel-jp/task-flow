@@ -20,6 +20,9 @@ export const SidebarProvider: React.FC<{ children: ReactNode }> = ({ children })
 
 export const useSidebar = (): SidebarContextType => {
   const ctx = useContext(SidebarContext);
-  if (!ctx) throw new Error('useSidebar must be used within SidebarProvider');
+  if (!ctx) {
+    // Fallback to avoid crashes if used outside provider
+    return { collapsed: false, setCollapsed: () => {}, toggleCollapsed: () => {} };
+  }
   return ctx;
 };
