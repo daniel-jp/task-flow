@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import Roles from "./pages/admin/Roles";
 import { TaskProvider } from "@/context/TaskContext";
 import { ThemeProvider } from '@/context/ThemeContext';
+import { SidebarProvider } from '@/context/SidebarContext';
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
     <ThemeProvider>
     <AuthProvider>
       <TaskProvider>
+        <SidebarProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -64,6 +66,7 @@ const App = () => (
             </Routes>
           </BrowserRouter>
           </TooltipProvider>
+        </SidebarProvider>
       </TaskProvider>
     </AuthProvider>
     </ThemeProvider>
