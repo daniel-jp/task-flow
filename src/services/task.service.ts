@@ -39,7 +39,6 @@ export const getTasksByUserId = async (id: string): Promise<Task[]> => {
 // Get all tasks
 export const getAllTasks = async (): Promise<Task[]> => {
   const response = await api.get<Task[]>("/tasks");
-  //console.log("Fetched tasks:", response.data);
   return response.data;
 };
 

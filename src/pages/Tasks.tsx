@@ -112,7 +112,6 @@ const handleSubmit = async (e: React.FormEvent) => {
     handleCloseDialog();
 
   } catch (error: unknown) {
-  console.error("ERROR:", error);
 
   let message = 'Failed to process task';
 

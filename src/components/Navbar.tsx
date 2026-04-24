@@ -12,11 +12,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useTheme } from '@/context/ThemeContext';
 import { MobileMenuButton } from './Sidebar';
+import { useSidebar } from '@/context/SidebarContext';
+import { cn } from '@/lib/utils';
 
 const Navbar = () => {
   const { user, logout, isAdminUser } = useAuth();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { collapsed } = useSidebar();
   const isDark = theme === 'dark';
 
   const handleLogout = () => {
@@ -25,7 +28,12 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 right-0 left-0 md:left-64 z-30 h-16 border-b border-border bg-background/80 backdrop-blur-md">
+    <header
+      className={cn(
+        'fixed top-0 right-0 left-0 z-30 h-16 border-b border-border bg-background/80 backdrop-blur-md transition-all duration-300',
+        collapsed ? 'md:left-16' : 'md:left-64'
+      )}
+    >
       <div className="flex h-full items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-3">
           <MobileMenuButton />
@@ -35,8 +43,8 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-2 md:gap-3">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             size="icon"
             onClick={toggleTheme}
             className="text-muted-foreground hover:text-foreground"

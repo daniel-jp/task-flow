@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import Roles from "./pages/admin/Roles";
 import { TaskProvider } from "@/context/TaskContext";
 import { ThemeProvider } from '@/context/ThemeContext';
+import { SidebarProvider } from "./context/SidebarContext";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
     <AuthProvider>
-      <TaskProvider>
+        <TaskProvider>
+        <SidebarProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -63,7 +65,8 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
-          </TooltipProvider>
+            </TooltipProvider>
+            </SidebarProvider>
       </TaskProvider>
     </AuthProvider>
     </ThemeProvider>

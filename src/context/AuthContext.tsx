@@ -24,8 +24,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Check for stored auth data on mount
     const storedUser = getStoredUser();
     const storedToken = getStoredToken();
-    console.log('STORED USER:', storedUser);
-    console.log('STORED TOKEN:', storedToken);
 
     
     if (storedUser && storedToken) {
@@ -49,7 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const updateUser = (updatedUser: User) => {
     setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+    sessionStorage.setItem('user', JSON.stringify(updatedUser));
   };
 
   const value: AuthContextType = {

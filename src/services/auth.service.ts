@@ -82,14 +82,15 @@ export const disableUser = async (id: string): Promise<void> => {
 };
 
 // Store auth data
+// Store auth data (sessionStorage = limpa ao fechar o browser)
 export const setAuthData = (token: string, user: User): void => {
-  localStorage.setItem('token', token);
-  localStorage.setItem('user', JSON.stringify(user));
+  sessionStorage.setItem('token', token);
+  sessionStorage.setItem('user', JSON.stringify(user));
 };
 
 // Get stored user
 export const getStoredUser = (): User | null => {
-  const userStr = localStorage.getItem('user');
+  const userStr = sessionStorage.getItem('user');
   if (userStr) {
     try {
       return JSON.parse(userStr);
@@ -102,13 +103,13 @@ export const getStoredUser = (): User | null => {
 
 // Get stored token
 export const getStoredToken = (): string | null => {
-  return localStorage.getItem('token');
+  return sessionStorage.getItem('token');
 };
 
 // Clear auth data
 export const clearAuthData = (): void => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  sessionStorage.removeItem('token');
+  sessionStorage.removeItem('user');
 };
 
 // Check if user is admin

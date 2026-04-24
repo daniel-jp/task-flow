@@ -12,6 +12,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useSidebar } from '@/context/SidebarContext';
 import {
   Sheet,
   SheetContent,
@@ -111,7 +112,7 @@ export const MobileMenuButton = () => {
 
 const Sidebar = () => {
   const { isAdminUser } = useAuth();
-  const [collapsed, setCollapsed] = useState(false);
+  const { collapsed, toggleCollapsed } = useSidebar();
   const filteredItems = navItems.filter(item => !item.adminOnly || isAdminUser);
 
   return (
@@ -142,7 +143,7 @@ const Sidebar = () => {
 
       {/* Collapse button */}
       <button
-        onClick={() => setCollapsed(!collapsed)}
+        onClick={toggleCollapsed}
         className="absolute -right-3 top-20 flex h-6 w-6 items-center justify-center rounded-full border border-sidebar-border bg-sidebar text-sidebar-foreground/70 hover:text-sidebar-foreground transition-colors"
       >
         {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
