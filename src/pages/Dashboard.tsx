@@ -48,7 +48,7 @@ const Dashboard = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Welcome back 👋</h1>
+            <h1 className="text-2xl font-bold text-foreground">Welcome back to your space </h1>
             <p className="text-muted-foreground">Here's your productivity overview</p>
           </div>
           <Link to="/tasks">
