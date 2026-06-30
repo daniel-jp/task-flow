@@ -38,7 +38,7 @@ export const register = async (data: RegisterData): Promise<User> => {
 
 // Login user
 export const login = async (data: LoginData): Promise<LoginResponse> => {
-  const response = await api.post<LoginResponse>("/users/auth", data);
+  const response = await api.post<LoginResponse>("/users/login", data);
   return response.data;
 };
 
